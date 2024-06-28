@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
@@ -43,6 +44,13 @@ app.get('/boardgames/stats', (req, res) => {
       res.json(row[0]);
     }
   });
+});
+
+// 정적 파일 서빙 설정
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
 // 서버 시작
