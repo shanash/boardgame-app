@@ -12,7 +12,7 @@ function App() {
   });
 
   useEffect(() => {
-    axios.get('/boardgames').then((response) => {
+    axios.get('https://boardgame-app-production-4d7b.up.railway.app/boardgames').then((response) => {
       setBoardgames(response.data);
     });
   }, []);
@@ -24,7 +24,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('/boardgames', newGame).then((response) => {
+    axios.post('https://boardgame-app-production-4d7b.up.railway.app/boardgames', newGame).then((response) => {
       setBoardgames([...boardgames, { ...newGame, id: response.data.id }]);
       setNewGame({
         name: '',
