@@ -1,13 +1,29 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg');
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-const db = new sqlite3.Database('database.sqlite');
+// PostgreSQL 데이터베이스 연결
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+
+// 데이터베이스 초기화
+pool.query(`CREATE TABLE IF NOT EXISTS boardgames (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    purchase_date TEXT,
+    play_count INTEGER,
+    fun_rating INTEGER,
+    sold_date TEXT
+  )`);
 
 // API 엔드포인트 설정
 app.get('/boardgames', (req, res) => {
