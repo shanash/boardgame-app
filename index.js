@@ -26,42 +26,39 @@ pool.query(`CREATE TABLE IF NOT EXISTS boardgames (
   )`);
 
 // API 엔드포인트 설정
-app.get('/boardgames', (req, res) => {
-  db.all('SELECT * FROM boardgames', (err, rows) => {
-    if (err) {
+app.get('/boardgames', async (req, res) => {
+    try {
+      const result = await pool.query('SELECT * FROM boardgames');
+      res.json(result.rows);
+    } catch (err) {
       res.status(500).send(err.message);
-    } else {
-      res.json(rows);
     }
   });
-});
 
-app.post('/boardgames', (req, res) => {
-  const { name, purchase_date, play_count, fun_rating, sold_date } = req.body;
-  db.run(
-    'INSERT INTO boardgames (name, purchase_date, play_count, fun_rating, sold_date) VALUES (?, ?, ?, ?, ?)',
-    [name, purchase_date, play_count, fun_rating, sold_date],
-    function (err) {
-      if (err) {
+app.post('/boardgames', async (req, res) => {
+    const { name, purchase_date, play_count, fun_rating, sold_date } = req.body;
+    try {
+        const result = await pool.query(
+        'INSERT INTO boardgames (name, purchase_date, play_count, fun_rating, sold_date) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+        [name, purchase_date, play_count, fun_rating, sold_date]
+        );
+        res.json({ id: result.rows[0].id });
+    } catch (err) {
         res.status(500).send(err.message);
-      } else {
-        res.json({ id: this.lastID });
-      }
     }
-  );
 });
 
 // 통계 API 엔드포인트 추가
-app.get('/boardgames/stats', (req, res) => {
-  db.all('SELECT AVG(fun_rating) as avg_rating, SUM(play_count) as total_plays FROM boardgames', (err, row) => {
-    if (err) {
-      res.status(500).send(err.message);
-    } else {
-      res.json(row[0]);
-    }
+app.get('/boardgames/stats', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT AVG(fun_rating) as avg_rating, SUM(play_count) as total_plays FROM boardgames');
+        res.json(result.rows);
+      } catch (err) {
+        res.status(500).send(err.message);
+      }
   });
-});
-
+  
+  
 // 정적 파일 서빙 설정
 app.use(express.static(path.join(__dirname, 'client/build')));
 
