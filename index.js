@@ -2,8 +2,14 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const cors = require('cors'); // cors 패키지 추가
 const app = express();
 const port = process.env.PORT || 3000;
+
+// CORS 설정 추가
+app.use(cors({
+    origin: '*' // 모든 도메인에서 접근 허용
+  }));
 
 app.use(bodyParser.json());
 
