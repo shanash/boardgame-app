@@ -2,14 +2,13 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
-const cors = require('cors'); // cors 패키지 추가
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS 설정 추가
 app.use(cors({
-    origin: '*' // 모든 도메인에서 접근 허용
-  }));
+  origin: '*'
+}));
 
 app.use(bodyParser.json());
 
@@ -38,10 +37,7 @@ pool.connect((err, client, release) => {
 pool.query(`CREATE TABLE IF NOT EXISTS boardgames (
   id SERIAL PRIMARY KEY,
   name TEXT,
-  purchase_date TEXT,
-  play_count INTEGER,
-  fun_rating INTEGER,
-  sold_date TEXT
+  purchase_date TEXT
 )`, (err, res) => {
   if (err) {
     console.error('Error creating table', err.stack);
@@ -60,14 +56,19 @@ app.get('/boardgames', async (req, res) => {
 });
 
 app.post('/boardgames', async (req, res) => {
-  const { name, purchase_date, play_count, fun_rating, sold_date } = req.body;
+  const { name, purchase_date } = req.body;
   console.log('Received data:', req.body); // 입력 데이터 로그 출력
   try {
     const result = await pool.query(
-      'INSERT INTO boardgames (name, purchase_date, play_count, fun_rating, sold_date) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-      [name, purchase_date, play_count, fun_rating, sold_date]
+      'INSERT INTO boardgames (name, purchase_date) VALUES ($1, $2) RETURNING id',
+      [name, purchase_date]
     );
     console.log('Inserted data:', result.rows[0]); // 삽입된 데이터 로그 출력
+
+    // 삽입 후 데이터베이스에서 다시 확인
+    const checkResult = await pool.query('SELECT * FROM boardgames');
+    console.log('Current data in table:', checkResult.rows);
+
     res.json({ id: result.rows[0].id });
   } catch (err) {
     console.error('Error inserting data', err.stack);

@@ -5,16 +5,17 @@ function App() {
   const [boardgames, setBoardgames] = useState([]);
   const [newGame, setNewGame] = useState({
     name: '',
-    purchase_date: '',
-    play_count: 0,
-    fun_rating: 0,
-    sold_date: ''
+    purchase_date: ''
   });
 
   useEffect(() => {
-    axios.get('https://boardgame-app-production-4d7b.up.railway.app/boardgames').then((response) => {
-      setBoardgames(response.data);
-    });
+    axios.get('https://boardgameapp-boardgame-app.up.railway.app/boardgames')
+      .then((response) => {
+        setBoardgames(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -24,16 +25,17 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('https://boardgame-app-production-4d7b.up.railway.app/boardgames', newGame).then((response) => {
-      setBoardgames([...boardgames, { ...newGame, id: response.data.id }]);
-      setNewGame({
-        name: '',
-        purchase_date: '',
-        play_count: 0,
-        fun_rating: 0,
-        sold_date: ''
+    axios.post('https://boardgameapp-boardgame-app.up.railway.app/boardgames', newGame)
+      .then((response) => {
+        setBoardgames([...boardgames, { ...newGame, id: response.data.id }]);
+        setNewGame({
+          name: '',
+          purchase_date: ''
+        });
+      })
+      .catch((error) => {
+        console.error('Error inserting data:', error);
       });
-    });
   };
 
   return (
@@ -52,27 +54,6 @@ function App() {
           name="purchase_date"
           placeholder="Purchase Date"
           value={newGame.purchase_date}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="play_count"
-          placeholder="Play Count"
-          value={newGame.play_count}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="fun_rating"
-          placeholder="Fun Rating"
-          value={newGame.fun_rating}
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          name="sold_date"
-          placeholder="Sold Date"
-          value={newGame.sold_date}
           onChange={handleChange}
         />
         <button type="submit">Add Game</button>

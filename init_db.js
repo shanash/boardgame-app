@@ -5,10 +5,7 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS boardgames (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    purchase_date TEXT,
-    play_count INTEGER,
-    fun_rating INTEGER,
-    sold_date TEXT
+    purchase_date TEXT
   )`);
 });
 
