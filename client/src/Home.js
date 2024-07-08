@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+console.log('Home component loaded'); // Home 컴포넌트 로드 확인
+
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
+  console.log('Rendering Home with boardgames:', boardgames); // 데이터 로깅
+
   return (
     <div>
       <h1>Boardgames List</h1>
@@ -23,15 +27,19 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
         <button type="submit">Add Game</button>
       </form>
       <ul>
-        {boardgames.map(game => (
-          <li key={game.id}>
-            <h2>{game.name}</h2>
-            <p>Purchase Date: {game.purchase_date}</p>
-            <p>Play Count: {game.play_count}</p>
-            <p>Average Fun Rating: {game.avg_fun_rating || 'Not rated yet'}</p>
-            <Link to={`/play/${game.id}`}>Play</Link>
-          </li>
-        ))}
+        {boardgames.length > 0 ? (
+          boardgames.map(game => (
+            <li key={game.id}>
+              <h2>{game.name || 'No name'}</h2>
+              <p>Purchase Date: {game.purchase_date || 'No purchase date'}</p>
+              <p>Play Count: {game.play_count !== undefined ? game.play_count : 'No play count'}</p>
+              <p>Average Fun Rating: {isNaN(parseFloat(game.avg_fun_rating)) ? 'Not rated yet' : game.avg_fun_rating}</p>
+              <Link to={`/play/${game.id}`}>Play</Link>
+            </li>
+          ))
+        ) : (
+          <p>No boardgames available</p>
+        )}
       </ul>
     </div>
   );

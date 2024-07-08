@@ -60,6 +60,7 @@ pool.query(`CREATE TABLE IF NOT EXISTS fun_ratings (
 
 app.get('/boardgames', async (req, res) => {
     try {
+      console.log('Fetching boardgames from database...'); // 데이터 로드 시작 로그
       const result = await pool.query('SELECT * FROM boardgames');
       const boardgames = result.rows;
   
@@ -67,11 +68,13 @@ app.get('/boardgames', async (req, res) => {
         const playCountResult = await pool.query('SELECT COUNT(*) as play_count FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
         const ratingsResult = await pool.query('SELECT AVG(rating) as avg_rating FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
         game.play_count = parseInt(playCountResult.rows[0].play_count, 10);
-        game.avg_fun_rating = parseFloat(ratingsResult.rows[0].avg_rating).toFixed(2) || 0;
+        game.avg_fun_rating = parseFloat(ratingsResult.rows[0].avg_rating).toFixed(2) || 'Not rated yet';
       }
   
+      console.log('Returning boardgames:', boardgames); // 데이터 로깅
       res.json(boardgames);
     } catch (err) {
+      console.error('Error fetching boardgames:', err.message);
       res.status(500).send(err.message);
     }
   });

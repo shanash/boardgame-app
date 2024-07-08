@@ -9,16 +9,3 @@ li {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-form {
-  margin-bottom: 20px;
-}
-
-form input {
-  margin-right: 10px;
-}
-
-form button {
-  padding: 5px 10px;
-  cursor: pointer;
-}

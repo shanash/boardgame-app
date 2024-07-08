@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function PlayGame() {
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [funRating, setFunRating] = useState(0);
 
   const handlePlay = () => {
     axios.put(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${id}/play`, { fun_rating: funRating })
       .then((response) => {
         console.log('Updated game:', response.data);
-        history.push('/');
+        navigate.push('/');
       })
       .catch((error) => {
         console.error('Error updating play count and fun rating:', error);
