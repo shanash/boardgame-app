@@ -119,7 +119,7 @@ app.put('/boardgames/:id/play', async (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('/play.html', (req, res) => {
+app.get('/play', (req, res) => {
   res.sendFile(path.join(__dirname, 'play.html'));
 });
 
