@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
   return (
     <div>
-      <h1>Boardgames</h1>
+      <h1>Boardgames List</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -23,10 +23,12 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
         <button type="submit">Add Game</button>
       </form>
       <ul>
-        {boardgames.map((game) => (
+        {boardgames.map(game => (
           <li key={game.id}>
-            {game.name} - {game.purchase_date} - Plays: {game.play_count} - Fun Rating: {game.fun_rating}
-            <Link to={`/play/${game.id}`}>Play</Link>
+            <h2>{game.name}</h2>
+            <p>Purchase Date: {game.purchase_date}</p>
+            <p>Play Count: {game.play_count}</p>
+            <p>Average Fun Rating: {game.avg_fun_rating || 'Not rated yet'}</p>
           </li>
         ))}
       </ul>

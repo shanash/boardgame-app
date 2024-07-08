@@ -59,22 +59,22 @@ pool.query(`CREATE TABLE IF NOT EXISTS fun_ratings (
 });
 
 app.get('/boardgames', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM boardgames');
-    const boardgames = result.rows;
-
-    for (let game of boardgames) {
-      const playCountResult = await pool.query('SELECT COUNT(*) as play_count FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
-      const ratingsResult = await pool.query('SELECT AVG(rating) as avg_rating FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
-      game.play_count = parseInt(playCountResult.rows[0].play_count, 10);
-      game.fun_rating = parseFloat(ratingsResult.rows[0].avg_rating).toFixed(2);
+    try {
+      const result = await pool.query('SELECT * FROM boardgames');
+      const boardgames = result.rows;
+  
+      for (let game of boardgames) {
+        const playCountResult = await pool.query('SELECT COUNT(*) as play_count FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
+        const ratingsResult = await pool.query('SELECT AVG(rating) as avg_rating FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
+        game.play_count = parseInt(playCountResult.rows[0].play_count, 10);
+        game.avg_fun_rating = parseFloat(ratingsResult.rows[0].avg_rating).toFixed(2) || 0;
+      }
+  
+      res.json(boardgames);
+    } catch (err) {
+      res.status(500).send(err.message);
     }
-
-    res.json(boardgames);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
+  });
 
 app.post('/boardgames', async (req, res) => {
   const { name, purchase_date } = req.body;
