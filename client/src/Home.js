@@ -29,6 +29,7 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
             <p>Purchase Date: {game.purchase_date}</p>
             <p>Play Count: {game.play_count}</p>
             <p>Average Fun Rating: {game.avg_fun_rating || 'Not rated yet'}</p>
+            <Link to={`/play/${game.id}`}>Play</Link>
           </li>
         ))}
       </ul>

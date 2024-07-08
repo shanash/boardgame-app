@@ -30,7 +30,7 @@ function App() {
     e.preventDefault();
     axios.post('https://boardgameapp-boardgame-app.up.railway.app/boardgames', newGame)
       .then((response) => {
-        setBoardgames([...boardgames, { ...newGame, id: response.data.id, play_count: 0, fun_rating: 0 }]);
+        setBoardgames([...boardgames, { ...newGame, id: response.data.id, play_count: 0, avg_fun_rating: 0 }]);
         setNewGame({
           name: '',
           purchase_date: ''
