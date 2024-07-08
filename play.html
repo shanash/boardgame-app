@@ -4,11 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Play Game</title>
+  <style>
+    .star-rating {
+      direction: rtl;
+      font-size: 2em;
+      unicode-bidi: bidi-override;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .star-rating input {
+      display: none;
+    }
+    .star-rating label {
+      color: #ddd;
+      font-size: 2em;
+      margin: 0 0.1em;
+    }
+    .star-rating input:checked ~ label {
+      color: #f5c518;
+    }
+    .star-rating input:hover ~ label {
+      color: #f5c518;
+    }
+  </style>
   <script>
     async function playGame() {
       const urlParams = new URLSearchParams(window.location.search);
       const gameId = urlParams.get('id');
-      const funRating = document.getElementById('funRating').value;
+      const funRating = document.querySelector('input[name="rating"]:checked').value;
 
       try {
         const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${gameId}/play`, {
@@ -29,19 +53,43 @@
       }
     }
 
+    async function fetchGameName(gameId) {
+      try {
+        const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames`);
+        const data = await response.json();
+        const game = data.find(g => g.id == gameId);
+        if (game) {
+          document.getElementById('gameName').innerText = game.name;
+        } else {
+          document.getElementById('gameName').innerText = 'Game not found';
+        }
+      } catch (error) {
+        document.getElementById('gameName').innerText = 'Error fetching game name';
+      }
+    }
+
     window.onload = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const gameId = urlParams.get('id');
-      document.getElementById('gameId').innerText = gameId;
+      fetchGameName(gameId);
     };
   </script>
 </head>
 <body>
   <h1>Play Game</h1>
-  <p>Game ID: <span id="gameId"></span></p>
-  <label for="funRating">Fun Rating:</label>
-  <input type="number" id="funRating" placeholder="Enter fun rating" required>
-  <br>
+  <p>Game: <span id="gameName"></span></p>
+  <div class="star-rating">
+    <input type="radio" id="rating10" name="rating" value="10"><label for="rating10">★</label>
+    <input type="radio" id="rating9" name="rating" value="9"><label for="rating9">★</label>
+    <input type="radio" id="rating8" name="rating" value="8"><label for="rating8">★</label>
+    <input type="radio" id="rating7" name="rating" value="7"><label for="rating7">★</label>
+    <input type="radio" id="rating6" name="rating" value="6"><label for="rating6">★</label>
+    <input type="radio" id="rating5" name="rating" value="5"><label for="rating5">★</label>
+    <input type="radio" id="rating4" name="rating" value="4"><label for="rating4">★</label>
+    <input type="radio" id="rating3" name="rating" value="3"><label for="rating3">★</label>
+    <input type="radio" id="rating2" name="rating" value="2"><label for="rating2">★</label>
+    <input type="radio" id="rating1" name="rating" value="1"><label for="rating1">★</label>
+  </div>
   <button onclick="playGame()">Play</button>
   <p id="result"></p>
 </body>
