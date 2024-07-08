@@ -1,21 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-console.log('Home component loaded'); // Home 컴포넌트 로드 확인
+import './Home.css';
 
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
-  console.log('Rendering Home with boardgames:', boardgames); // 데이터 로깅
-
   return (
-    <div>
+    <div className="container">
       <h1>Boardgames List</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form">
         <input
           type="text"
           name="name"
           placeholder="Name"
           value={newGame.name}
           onChange={handleChange}
+          className="input"
         />
         <input
           type="date"
@@ -23,23 +21,20 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
           placeholder="Purchase Date"
           value={newGame.purchase_date}
           onChange={handleChange}
+          className="input"
         />
-        <button type="submit">Add Game</button>
+        <button type="submit" className="button">Add Game</button>
       </form>
-      <ul>
-        {boardgames.length > 0 ? (
-          boardgames.map(game => (
-            <li key={game.id}>
-              <h2>{game.name || 'No name'}</h2>
-              <p>Purchase Date: {game.purchase_date || 'No purchase date'}</p>
-              <p>Play Count: {game.play_count !== undefined ? game.play_count : 'No play count'}</p>
-              <p>Average Fun Rating: {isNaN(parseFloat(game.avg_fun_rating)) ? 'Not rated yet' : game.avg_fun_rating}</p>
-              <Link to={`/play/${game.id}`}>Play</Link>
-            </li>
-          ))
-        ) : (
-          <p>No boardgames available</p>
-        )}
+      <ul className="game-list">
+        {boardgames.map(game => (
+          <li key={game.id} className="game-item">
+            <h2 className="game-title">{game.name || 'No name'}</h2>
+            <p className="game-info">Purchase Date: {game.purchase_date || 'No purchase date'}</p>
+            <p className="game-info">Play Count: {game.play_count !== undefined ? game.play_count : 'No play count'}</p>
+            <p className="game-info">Average Fun Rating: {game.avg_fun_rating !== undefined ? game.avg_fun_rating : 'Not rated yet'}</p>
+            <Link to={`/play/${game.id}`} className="play-link">Play</Link>
+          </li>
+        ))}
       </ul>
     </div>
   );

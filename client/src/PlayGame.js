@@ -1,13 +1,14 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function PlayGame() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // Use effect to redirect to /play?id={id}
   React.useEffect(() => {
-    window.location.href = `/play?id=${id}`;
-  }, [id]);
+    navigate(`/play?id=${id}`);
+  }, [id, navigate]);
 
   return null; // Render nothing since we are redirecting
 }

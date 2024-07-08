@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Play Game</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
     .star-rating {
       direction: rtl;
       font-size: 2em;
@@ -12,20 +32,59 @@
       display: flex;
       justify-content: center;
       cursor: pointer;
+      margin-bottom: 20px;
     }
+
     .star-rating input {
       display: none;
     }
+
     .star-rating label {
       color: #ddd;
       font-size: 2em;
       margin: 0 0.1em;
       cursor: pointer;
     }
+
     .star-rating input:checked ~ label,
     .star-rating label:hover,
     .star-rating label:hover ~ label {
       color: #f5c518;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:active {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1em;
+      color: #333;
+    }
+
+    @media (max-width: 600px) {
+      .star-rating {
+        font-size: 1.5em;
+      }
+
+      button {
+        width: 80%;
+        font-size: 1em;
+      }
+
+      #result {
+        font-size: 0.9em;
+      }
     }
   </style>
   <script>
