@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
+import Home from './Home';
+import PlayGame from './PlayGame';
 
 function App() {
   const [boardgames, setBoardgames] = useState([]);
@@ -7,7 +10,6 @@ function App() {
     name: '',
     purchase_date: ''
   });
-  const [funRating, setFunRating] = useState(0);
 
   useEffect(() => {
     axios.get('https://boardgameapp-boardgame-app.up.railway.app/boardgames')
@@ -39,56 +41,20 @@ function App() {
       });
   };
 
-  const handlePlay = (id) => {
-    axios.put(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${id}/play`, { fun_rating: funRating })
-      .then((response) => {
-        const updatedBoardgames = boardgames.map((game) =>
-          game.id === id ? response.data : game
-        );
-        setBoardgames(updatedBoardgames);
-      })
-      .catch((error) => {
-        console.error('Error updating play count and fun rating:', error);
-      });
-  };
-
   return (
-    <div>
-      <h1>Boardgames</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={newGame.name}
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          name="purchase_date"
-          placeholder="Purchase Date"
-          value={newGame.purchase_date}
-          onChange={handleChange}
-        />
-        <button type="submit">Add Game</button>
-      </form>
-      <ul>
-        {boardgames.map((game) => (
-          <li key={game.id}>
-            {game.name} - {game.purchase_date} - Plays: {game.play_count} - Fun Rating: {game.fun_rating}
-            <button onClick={() => handlePlay(game.id)}>Play</button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <input
-          type="number"
-          value={funRating}
-          onChange={(e) => setFunRating(e.target.value)}
-          placeholder="Fun Rating"
-        />
-      </div>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <Home
+            boardgames={boardgames}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            newGame={newGame}
+          />
+        </Route>
+        <Route path="/play/:id" component={PlayGame} />
+      </Switch>
+    </Router>
   );
 }
 
