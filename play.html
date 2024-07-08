@@ -20,11 +20,11 @@
       color: #ddd;
       font-size: 2em;
       margin: 0 0.1em;
+      cursor: pointer;
     }
-    .star-rating input:checked ~ label {
-      color: #f5c518;
-    }
-    .star-rating input:hover ~ label {
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
       color: #f5c518;
     }
   </style>
