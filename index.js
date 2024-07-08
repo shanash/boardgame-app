@@ -37,9 +37,7 @@ pool.connect((err, client, release) => {
 pool.query(`CREATE TABLE IF NOT EXISTS boardgames (
   id SERIAL PRIMARY KEY,
   name TEXT,
-  purchase_date TEXT,
-  play_count INTEGER DEFAULT 0,
-  fun_rating INTEGER DEFAULT 0
+  purchase_date TEXT
 )`, (err, res) => {
   if (err) {
     console.error('Error creating table', err.stack);
@@ -48,10 +46,31 @@ pool.query(`CREATE TABLE IF NOT EXISTS boardgames (
   }
 });
 
+pool.query(`CREATE TABLE IF NOT EXISTS fun_ratings (
+  id SERIAL PRIMARY KEY,
+  boardgame_id INTEGER REFERENCES boardgames(id),
+  rating INTEGER
+)`, (err, res) => {
+  if (err) {
+    console.error('Error creating table', err.stack);
+  } else {
+    console.log('Table fun_ratings is successfully created or already exists');
+  }
+});
+
 app.get('/boardgames', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM boardgames');
-    res.json(result.rows);
+    const boardgames = result.rows;
+
+    for (let game of boardgames) {
+      const playCountResult = await pool.query('SELECT COUNT(*) as play_count FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
+      const ratingsResult = await pool.query('SELECT AVG(rating) as avg_rating FROM fun_ratings WHERE boardgame_id = $1', [game.id]);
+      game.play_count = parseInt(playCountResult.rows[0].play_count, 10);
+      game.fun_rating = parseFloat(ratingsResult.rows[0].avg_rating).toFixed(2);
+    }
+
+    res.json(boardgames);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -74,21 +93,27 @@ app.post('/boardgames', async (req, res) => {
   }
 });
 
-// 특정 보드게임의 플레이 횟수 증가 및 경험 점수 업데이트
+// 특정 보드게임의 플레이 횟수 증가 및 경험 점수 추가
 app.put('/boardgames/:id/play', async (req, res) => {
   const { id } = req.params;
   const { fun_rating } = req.body;
   try {
-    // 플레이 횟수 증가
-    const result = await pool.query(
-      'UPDATE boardgames SET play_count = play_count + 1, fun_rating = $1 WHERE id = $2 RETURNING *',
-      [fun_rating, id]
+    // fun_rating 값 추가
+    await pool.query(
+      'INSERT INTO fun_ratings (boardgame_id, rating) VALUES ($1, $2)',
+      [id, fun_rating]
     );
-    if (result.rows.length === 0) {
-      res.status(404).send('Boardgame not found');
-    } else {
-      res.json(result.rows[0]);
-    }
+
+    const playCountResult = await pool.query('SELECT COUNT(*) as play_count FROM fun_ratings WHERE boardgame_id = $1', [id]);
+    const ratingsResult = await pool.query('SELECT AVG(rating) as avg_rating FROM fun_ratings WHERE boardgame_id = $1', [id]);
+    
+    const updatedGame = {
+      id: id,
+      play_count: parseInt(playCountResult.rows[0].play_count, 10),
+      fun_rating: parseFloat(ratingsResult.rows[0].avg_rating).toFixed(2)
+    };
+
+    res.json(updatedGame);
   } catch (err) {
     console.error('Error updating play count and fun rating', err.stack);
     res.status(500).send(err.message);
