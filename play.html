@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Game</title>
+  <script>
+    async function playGame() {
+      const gameId = document.getElementById('gameId').value;
+      const funRating = document.getElementById('funRating').value;
+
+      try {
+        const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${gameId}/play`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ fun_rating: funRating })
+        });
+        if (response.ok) {
+          const result = await response.json();
+          document.getElementById('result').innerText = 'Play count updated: ' + JSON.stringify(result);
+        } else {
+          document.getElementById('result').innerText = 'Error: ' + response.statusText;
+        }
+      } catch (error) {
+        document.getElementById('result').innerText = 'Error: ' + error.message;
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Play Game</h1>
+  <label for="gameId">Game ID:</label>
+  <input type="number" id="gameId" placeholder="Enter game ID" required>
+  <br>
+  <label for="funRating">Fun Rating:</label>
+  <input type="number" id="funRating" placeholder="Enter fun rating" required>
+  <br>
+  <button onclick="playGame()">Play</button>
+  <p id="result"></p>
+</body>
+</html>
