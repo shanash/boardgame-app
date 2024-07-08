@@ -13,26 +13,31 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
       background-color: #f4f4f4;
     }
 
     h1 {
       margin-bottom: 20px;
+      text-align: center;
     }
 
     p {
       margin-bottom: 10px;
+      text-align: center;
     }
 
     .star-rating {
       direction: rtl;
-      font-size: 2em;
+      font-size: 1.5em; /* Adjust font size */
       unicode-bidi: bidi-override;
       display: flex;
       justify-content: center;
       cursor: pointer;
       margin-bottom: 20px;
+      width: 100%;
+      max-width: 300px;
+      box-sizing: border-box;
     }
 
     .star-rating input {
@@ -41,9 +46,11 @@
 
     .star-rating label {
       color: #ddd;
-      font-size: 2em;
+      font-size: 1.5em; /* Adjust font size */
       margin: 0 0.1em;
       cursor: pointer;
+      flex: 1; /* Distribute space equally */
+      text-align: center; /* Center align the star */
     }
 
     .star-rating input:checked ~ label,
@@ -60,6 +67,10 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      width: 80%;
+      max-width: 300px;
+      box-sizing: border-box;
+      text-align: center;
     }
 
     button:active {
@@ -70,11 +81,16 @@
       margin-top: 20px;
       font-size: 1em;
       color: #333;
+      text-align: center;
     }
 
     @media (max-width: 600px) {
       .star-rating {
-        font-size: 1.5em;
+        font-size: 1.2em; /* Further adjust font size for small screens */
+      }
+
+      .star-rating label {
+        font-size: 1.2em; /* Further adjust font size for small screens */
       }
 
       button {
