@@ -6,7 +6,8 @@
   <title>Play Game</title>
   <script>
     async function playGame() {
-      const gameId = document.getElementById('gameId').value;
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameId = urlParams.get('id');
       const funRating = document.getElementById('funRating').value;
 
       try {
@@ -27,13 +28,17 @@
         document.getElementById('result').innerText = 'Error: ' + error.message;
       }
     }
+
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameId = urlParams.get('id');
+      document.getElementById('gameId').innerText = gameId;
+    };
   </script>
 </head>
 <body>
   <h1>Play Game</h1>
-  <label for="gameId">Game ID:</label>
-  <input type="number" id="gameId" placeholder="Enter game ID" required>
-  <br>
+  <p>Game ID: <span id="gameId"></span></p>
   <label for="funRating">Fun Rating:</label>
   <input type="number" id="funRating" placeholder="Enter fun rating" required>
   <br>
