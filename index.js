@@ -44,7 +44,7 @@ app.post('/boardgames', async (req, res) => {
   const { name } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO boardgames (name) VALUES ($1) RETURNING *', // Automatically sets added_date to current timestamp
+      'INSERT INTO boardgames (name) VALUES ($1) RETURNING *',
       [name]
     );
     res.status(201).json(result.rows[0]);
@@ -75,6 +75,19 @@ app.put('/boardgames/:id/play', async (req, res) => {
     res.json(updatedGame);
   } catch (err) {
     console.error('Error updating play count and fun rating', err.stack);
+    res.status(500).send(err.message);
+  }
+});
+
+// Add this endpoint to handle the deletion of a boardgame
+app.delete('/boardgames/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM boardgames WHERE id = $1', [id]);
+    await pool.query('DELETE FROM fun_ratings WHERE boardgame_id = $1', [id]);
+    res.status(200).send({ message: 'Boardgame deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting boardgame', err.stack);
     res.status(500).send(err.message);
   }
 });

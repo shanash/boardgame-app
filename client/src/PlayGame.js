@@ -63,9 +63,8 @@ function PlayGame() {
         <input type="radio" id="rating2" name="rating" value="2" /><label htmlFor="rating2">★</label>
         <input type="radio" id="rating1" name="rating" value="1" /><label htmlFor="rating1">★</label>
       </div>
-      <button onClick={playGame}>Play</button>
+      <button onClick={playGame}>확인</button>
       <p id="result">{result}</p>
-      <button onClick={() => window.history.back()}>Back</button>
     </div>
   );
 }
