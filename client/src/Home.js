@@ -1,17 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import QRCode from 'qrcode.react';
-import './Home.css';
 import axios from 'axios';
+import Modal from 'react-modal';
+import './Home.css';
+
+Modal.setAppElement('#root'); // Ensure accessibility
 
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
-  const handleDelete = async (id) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [gameToDelete, setGameToDelete] = useState(null);
+
+  const openModal = (game) => {
+    setGameToDelete(game);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setGameToDelete(null);
+  };
+
+  const handleDelete = async () => {
     try {
-      await axios.delete(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${id}`);
+      await axios.delete(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${gameToDelete.id}`);
       // After deleting, you might want to update the list of boardgames
       window.location.reload(); // or you can implement a more efficient way to update the state
+      closeModal();
     } catch (error) {
       console.error('Error deleting data:', error);
+      closeModal();
     }
   };
 
@@ -40,10 +58,22 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
               <QRCode value={`https://boardgameapp-boardgame-app.up.railway.app/play/${game.id}`} size={128} />
             </div>
             <Link to={`/play/${game.id}`} className="play-link">Play</Link>
-            <button onClick={() => handleDelete(game.id)} className="delete-button">Delete</button>
+            <button onClick={() => openModal(game)} className="delete-button">Delete</button>
           </li>
         ))}
       </ul>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Delete Confirmation"
+        className="modal"
+        overlayClassName="overlay"
+      >
+        <h2>Are you sure?</h2>
+        <p>Do you really want to delete <strong>{gameToDelete?.name}</strong>?</p>
+        <button onClick={handleDelete} className="button">Yes, Delete</button>
+        <button onClick={closeModal} className="button">Cancel</button>
+      </Modal>
     </div>
   );
 }

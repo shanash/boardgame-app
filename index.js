@@ -79,12 +79,13 @@ app.put('/boardgames/:id/play', async (req, res) => {
   }
 });
 
-// Add this endpoint to handle the deletion of a boardgame
 app.delete('/boardgames/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    await pool.query('DELETE FROM boardgames WHERE id = $1', [id]);
+    // Delete related fun ratings first
     await pool.query('DELETE FROM fun_ratings WHERE boardgame_id = $1', [id]);
+    // Then delete the boardgame
+    await pool.query('DELETE FROM boardgames WHERE id = $1', [id]);
     res.status(200).send({ message: 'Boardgame deleted successfully' });
   } catch (err) {
     console.error('Error deleting boardgame', err.stack);
