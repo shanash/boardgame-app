@@ -50,8 +50,7 @@ function PlayGame() {
 
   return (
     <div className="container">
-      <h1>Play Game</h1>
-      <p>Game: <span id="gameName">{gameName}</span></p>
+      <h1><span id="gameName">{gameName}</span></h1>
       <div className="star-rating">
         <input type="radio" id="rating10" name="rating" value="10" /><label htmlFor="rating10">★</label>
         <input type="radio" id="rating9" name="rating" value="9" /><label htmlFor="rating9">★</label>

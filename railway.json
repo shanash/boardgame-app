@@ -1,0 +1,23 @@
+{
+    "builds": [
+      {
+        "src": "client/",
+        "use": "@railway/with-nodejs"
+      },
+      {
+        "src": "index.js",
+        "use": "@railway/with-nodejs"
+      }
+    ],
+    "deployments": [
+      {
+        "src": "index.js",
+        "dest": "/app"
+      },
+      {
+        "src": "client/build",
+        "dest": "/app/client/build"
+      }
+    ]
+  }
+  

@@ -16,21 +16,13 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
           onChange={handleChange}
           className="input"
         />
-        <input
-          type="date"
-          name="purchase_date"
-          placeholder="Purchase Date"
-          value={newGame.purchase_date}
-          onChange={handleChange}
-          className="input"
-        />
         <button type="submit" className="button">Add Game</button>
       </form>
       <ul className="game-list">
         {boardgames.map(game => (
           <li key={game.id} className="game-item">
             <h2 className="game-title">{game.name || 'No name'}</h2>
-            <p className="game-info">Purchase Date: {game.purchase_date || 'No purchase date'}</p>
+            <p className="game-info">Added Date: {new Date(game.added_date).toLocaleDateString() || 'No added date'}</p>
             <p className="game-info">Play Count: {game.play_count !== undefined ? game.play_count : 'No play count'}</p>
             <p className="game-info">Average Fun Rating: {game.avg_fun_rating !== undefined ? game.avg_fun_rating : 'Not rated yet'}</p>
             <Link to={`/play/${game.id}`} className="play-link">Play</Link>

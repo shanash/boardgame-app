@@ -41,11 +41,11 @@ app.get('/boardgames', async (req, res) => {
 });
 
 app.post('/boardgames', async (req, res) => {
-  const { name, purchase_date } = req.body;
+  const { name } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO boardgames (name, purchase_date) VALUES ($1, $2) RETURNING *',
-      [name, purchase_date]
+      'INSERT INTO boardgames (name) VALUES ($1) RETURNING *', // Automatically sets added_date to current timestamp
+      [name]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
