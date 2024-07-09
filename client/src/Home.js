@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import QRCode from 'qrcode.react';
 import './Home.css';
 
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
@@ -33,6 +34,9 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
             <p className="game-info">Play Count: {game.play_count !== undefined ? game.play_count : 'No play count'}</p>
             <p className="game-info">Average Fun Rating: {game.avg_fun_rating !== undefined ? game.avg_fun_rating : 'Not rated yet'}</p>
             <Link to={`/play/${game.id}`} className="play-link">Play</Link>
+            <div className="qr-code">
+              <QRCode value={`https://boardgameapp-boardgame-app.up.railway.app/play/${game.id}`} size={128} />
+            </div>
           </li>
         ))}
       </ul>

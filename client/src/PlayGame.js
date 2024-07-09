@@ -1,16 +1,74 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import './PlayGame.css';
 
 function PlayGame() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const [gameName, setGameName] = useState('');
+  const [result, setResult] = useState('');
 
-  // Use effect to redirect to /play?id={id}
-  React.useEffect(() => {
-    navigate(`/play?id=${id}`);
-  }, [id, navigate]);
+  useEffect(() => {
+    async function fetchGameName() {
+      try {
+        const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames`);
+        const data = await response.json();
+        const game = data.find(g => g.id == id);
+        if (game) {
+          setGameName(game.name);
+        } else {
+          setGameName('Game not found');
+        }
+      } catch (error) {
+        setGameName('Error fetching game name');
+      }
+    }
 
-  return null; // Render nothing since we are redirecting
+    fetchGameName();
+  }, [id]);
+
+  const playGame = async () => {
+    const funRating = document.querySelector('input[name="rating"]:checked').value;
+
+    try {
+      const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${id}/play`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fun_rating: funRating })
+      });
+      if (response.ok) {
+        const result = await response.json();
+        setResult('Play count updated: ' + JSON.stringify(result));
+      } else {
+        setResult('Error: ' + response.statusText);
+      }
+    } catch (error) {
+      setResult('Error: ' + error.message);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h1>Play Game</h1>
+      <p>Game: <span id="gameName">{gameName}</span></p>
+      <div className="star-rating">
+        <input type="radio" id="rating10" name="rating" value="10" /><label htmlFor="rating10">★</label>
+        <input type="radio" id="rating9" name="rating" value="9" /><label htmlFor="rating9">★</label>
+        <input type="radio" id="rating8" name="rating" value="8" /><label htmlFor="rating8">★</label>
+        <input type="radio" id="rating7" name="rating" value="7" /><label htmlFor="rating7">★</label>
+        <input type="radio" id="rating6" name="rating" value="6" /><label htmlFor="rating6">★</label>
+        <input type="radio" id="rating5" name="rating" value="5" /><label htmlFor="rating5">★</label>
+        <input type="radio" id="rating4" name="rating" value="4" /><label htmlFor="rating4">★</label>
+        <input type="radio" id="rating3" name="rating" value="3" /><label htmlFor="rating3">★</label>
+        <input type="radio" id="rating2" name="rating" value="2" /><label htmlFor="rating2">★</label>
+        <input type="radio" id="rating1" name="rating" value="1" /><label htmlFor="rating1">★</label>
+      </div>
+      <button onClick={playGame}>Play</button>
+      <p id="result">{result}</p>
+      <button onClick={() => window.history.back()}>Back</button>
+    </div>
+  );
 }
 
 export default PlayGame;

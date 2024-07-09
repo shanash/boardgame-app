@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import Routes instead of Switch
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import Home from './Home';
 import PlayGame from './PlayGame';
-import './Home.css';  // Import the CSS file
+import './Home.css';
+import './PlayGame.css';
 
 function App() {
   const [boardgames, setBoardgames] = useState([]);
