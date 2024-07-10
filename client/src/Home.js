@@ -145,8 +145,12 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
           <li key={game.id} className="game-item">
             <h2 className="game-title">{game.name || 'No name'}</h2>
             <p className="game-info">Added Date: {new Date(game.added_date).toLocaleDateString() || 'No added date'}</p>
-            <p className="game-info">Play Count: {game.play_count !== undefined ? game.play_count : 'No play count'}</p>
-            <p className="game-info">Average Fun Rating: {game.avg_fun_rating !== undefined ? game.avg_fun_rating : 'Not rated yet'}</p>
+            {game.play_count > 0 && (
+              <>
+                <p className="game-info">Play Count: {game.play_count}</p>
+                <p className="game-info">Average Fun Rating: {game.avg_fun_rating}</p>
+              </>
+            )}
             <Link to={`/play/${game.id}`} className="play-link">Play</Link>
             <button onClick={() => openModal(game)} className="delete-button">Delete</button>
           </li>
