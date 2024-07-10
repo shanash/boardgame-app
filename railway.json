@@ -5,13 +5,13 @@
         "use": "@railway/with-nodejs"
       },
       {
-        "src": "index.js",
+        "src": "server.js",
         "use": "@railway/with-nodejs"
       }
     ],
     "deployments": [
       {
-        "src": "index.js",
+        "src": "server.js",
         "dest": "/app"
       },
       {
