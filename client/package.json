@@ -9,9 +9,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
-    "jspdf": "^2.5.1",
-    "loader-utils": "^3.3.1",
-    "nth-check": "^2.1.1",
     "pdf-lib": "^1.17.1",
     "qrcode": "^1.5.3",
     "qrcode.react": "^3.1.0",
@@ -20,7 +17,6 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.24.1",
     "react-scripts": "^5.0.1",
-    "shell-quote": "^1.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
