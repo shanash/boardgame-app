@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import QRCode from 'qrcode.react';
 import axios from 'axios';
 import { PDFDocument, rgb } from 'pdf-lib';
 import QRCodeLib from 'qrcode';
@@ -11,6 +12,7 @@ Modal.setAppElement('#root'); // Ensure accessibility
 
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [warningModalIsOpen, setWarningModalIsOpen] = useState(false);
   const [gameToDelete, setGameToDelete] = useState(null);
 
   const openModal = (game) => {
@@ -21,6 +23,14 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
   const closeModal = () => {
     setModalIsOpen(false);
     setGameToDelete(null);
+  };
+
+  const openWarningModal = () => {
+    setWarningModalIsOpen(true);
+  };
+
+  const closeWarningModal = () => {
+    setWarningModalIsOpen(false);
   };
 
   const handleDelete = async () => {
@@ -106,10 +116,19 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
     }
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (!newGame.name.trim()) {
+      openWarningModal();
+      return;
+    }
+    handleSubmit(e); // This will only be called if the name is not empty
+  };
+
   return (
     <div className="container">
       <h1>Boardgames List</h1>
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleFormSubmit} className="form">
         <input
           type="text"
           name="name"
@@ -144,6 +163,17 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
         <p>Do you really want to delete <strong>{gameToDelete?.name}</strong>?</p>
         <button onClick={handleDelete} className="button">Yes, Delete</button>
         <button onClick={closeModal} className="button">Cancel</button>
+      </Modal>
+      <Modal
+        isOpen={warningModalIsOpen}
+        onRequestClose={closeWarningModal}
+        contentLabel="Warning"
+        className="modal"
+        overlayClassName="overlay"
+      >
+        <h2>Warning</h2>
+        <p>Please enter a game name.</p>
+        <button onClick={closeWarningModal} className="button">OK</button>
       </Modal>
     </div>
   );
