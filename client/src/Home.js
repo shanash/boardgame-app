@@ -10,6 +10,8 @@ import './Home.css';
 
 Modal.setAppElement('#root'); // Ensure accessibility
 
+const apiUrl = `http://${process.env.REACT_APP_API_URL}`;
+
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [warningModalIsOpen, setWarningModalIsOpen] = useState(false);
@@ -35,7 +37,7 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${gameToDelete.id}`);
+      await axios.delete(`${apiUrl}/boardgames/${gameToDelete.id}`);
       window.location.reload(); // or you can implement a more efficient way to update the state
       closeModal();
     } catch (error) {
@@ -95,7 +97,7 @@ function Home({ boardgames, handleChange, handleSubmit, newGame }) {
         maxWidth: qrSize
       });
 
-      const qrCodeDataUrl = await generateQRCode(`https://boardgameapp-boardgame-app.up.railway.app/play/${game.id}`, { width: qrSize, margin: 1 });
+      const qrCodeDataUrl = await generateQRCode(`${apiUrl}/play/${game.id}`, { width: qrSize, margin: 1 });
 
       const qrImage = await pdfDoc.embedPng(qrCodeDataUrl);
       page.drawImage(qrImage, {

@@ -6,6 +6,8 @@ import PlayGame from './PlayGame';
 import './Home.css';
 import './PlayGame.css';
 
+const apiUrl = `http://${process.env.REACT_APP_API_URL}`;
+
 function App() {
   const [boardgames, setBoardgames] = useState([]);
   const [newGame, setNewGame] = useState({
@@ -14,7 +16,7 @@ function App() {
   });
 
   useEffect(() => {
-    axios.get('https://boardgameapp-boardgame-app.up.railway.app/boardgames')
+    axios.get(`${apiUrl}/boardgames`)
       .then((response) => {
         setBoardgames(response.data);
       })
@@ -30,7 +32,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('https://boardgameapp-boardgame-app.up.railway.app/boardgames', newGame)
+    axios.post(`${apiUrl}/boardgames`, newGame)
       .then((response) => {
         setBoardgames([...boardgames, { ...newGame, id: response.data.id, play_count: 0, avg_fun_rating: 'Not rated yet' }]);
         setNewGame({

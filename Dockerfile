@@ -15,5 +15,5 @@ COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json
 RUN npm install --only=production
 
-EXPOSE 3000
+EXPOSE 3001
 CMD ["node", "server.js"]

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './PlayGame.css';
 
+const apiUrl = `http://${process.env.REACT_APP_API_URL}`;
+
 function PlayGame() {
   const { id } = useParams();
   const [gameName, setGameName] = useState('');
@@ -10,7 +12,7 @@ function PlayGame() {
   useEffect(() => {
     async function fetchGameName() {
       try {
-        const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames`);
+        const response = await fetch(`${apiUrl}/boardgames`);
         const data = await response.json();
         const game = data.find(g => g.id == id);
         if (game) {
@@ -30,7 +32,7 @@ function PlayGame() {
     const funRating = document.querySelector('input[name="rating"]:checked').value;
 
     try {
-      const response = await fetch(`https://boardgameapp-boardgame-app.up.railway.app/boardgames/${id}/play`, {
+      const response = await fetch(`${apiUrl}/boardgames/${id}/play`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

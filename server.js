@@ -1,13 +1,50 @@
 const express = require('express');
 const path = require('path');
 const { Pool } = require('pg');
+const cors = require('cors'); // 추가
+const dotenv = require('dotenv');
+
+dotenv.config(); // .env 파일의 환경 변수를 로드합니다.
+
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
+
+console.log('DATABASE_PRIVATE_URL:', process.env.DATABASE_PRIVATE_URL); // 환경 변수 로그 출력
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_PRIVATE_URL,
 });
 
+// 테이블 생성 스크립트
+const createTables = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS boardgames (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS fun_ratings (
+        id SERIAL PRIMARY KEY,
+        boardgame_id INTEGER NOT NULL,
+        rating INTEGER NOT NULL,
+        FOREIGN KEY (boardgame_id) REFERENCES boardgames (id)
+      );
+    `);
+
+    console.log('Tables created successfully or already exist');
+  } catch (err) {
+    console.error('Error creating tables', err);
+  }
+};
+
+// 테이블 생성 호출
+createTables();
+
+app.use(cors()); // 추가
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
