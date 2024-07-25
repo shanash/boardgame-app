@@ -10,7 +10,7 @@ import './Home.css';
 
 Modal.setAppElement('#root'); // Ensure accessibility
 
-const apiUrl = `http://${process.env.REACT_APP_API_URL}`;
+const apiUrl = `${process.env.REACT_APP_API_URL}`;
 
 function Home({ boardgames, handleChange, handleSubmit, newGame }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);

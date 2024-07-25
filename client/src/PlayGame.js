@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './PlayGame.css';
 
-const apiUrl = `http://${process.env.REACT_APP_API_URL}`;
+const apiUrl = `${process.env.REACT_APP_API_URL}`;
 
 function PlayGame() {
   const { id } = useParams();
